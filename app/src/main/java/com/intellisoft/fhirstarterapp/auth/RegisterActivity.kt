@@ -175,11 +175,11 @@ class RegisterActivity : AppCompatActivity() {
             User = PayloadData(
                 username = emailText,
                 name = "$firstNameText $lastNameText",
-                telephone = telephoneText,
+                phone_no = telephoneText,
                 email = emailText,
                 password = passwordText,
-                designationId = designationId.toString(),
-                countyId = countyId.toString(),
+                designation_id = designationId.toString(),
+                county_id = countyId.toString(),
                 confirm_password = confirmPasswordText
             )
         )

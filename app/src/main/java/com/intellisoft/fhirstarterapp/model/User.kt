@@ -14,10 +14,10 @@ data class User(
 data class PayloadData(
     val username: String="",
     val name: String="",
-    val telephone: String="",
+    val phone_no: String="",
     val email: String="",
-    val designationId: String="",
-    val countyId: String="",
+    val designation_id: String="",
+    val county_id: String="",
     val password: String="",
     val confirm_password: String =""
 )
@@ -85,6 +85,32 @@ data class UserInformation(
     val email: String
 )
 
+data class UserProfileInformationResponse(
+    val status: String,
+    val message: String,
+    val user: ProfileData
+)
+
+data class ProfileData(
+    val User: ProfileUser,
+    val Designation: ProfileDesignation,
+    val County: ProfileCounty
+)
+
+data class ProfileUser(
+    val id: String,
+    val username: String
+)
+
+data class ProfileDesignation(
+    val id: String,
+    val name: String
+)
+
+data class ProfileCounty(
+    val id: String,
+    val county_name: String
+)
 
 /***
  * expecting 190 records

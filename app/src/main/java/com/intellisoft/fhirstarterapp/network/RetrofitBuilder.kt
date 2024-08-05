@@ -9,10 +9,18 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitBuilder {
 
-    fun getRetrofit(baseUrl: String): Retrofit {
+    fun getRetrofit(baseUrl: String, token: String): Retrofit {
 
-        val interceptor = HttpLoggingInterceptor()
-        interceptor.level = HttpLoggingInterceptor.Level.BODY
+        var interceptor =
+
+    if (token.isEmpty()){
+        HttpLoggingInterceptor()
+        //interceptor.level = HttpLoggingInterceptor.Level.BODY
+    }else  {
+        AuthInterceptor(token = token)
+    }
+
+
 
         // Retrieve
 

@@ -1,7 +1,6 @@
 package com.intellisoft.fhirstarterapp.network
 
 import android.app.Activity
-import android.app.Application
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
@@ -66,8 +65,9 @@ class RetrofitCallsAuthentication {
             CoroutineScope(Dispatchers.IO + job).launch {
 
                 val baseUrl = context.getString(UrlData.BASE_URL.message)
+                val token = LocalData().getSharedPref("access_token", context)
 
-                val apiService = RetrofitBuilder.getRetrofit(baseUrl).create(Interface::class.java)
+                val apiService = RetrofitBuilder.getRetrofit(baseUrl, "$token").create(Interface::class.java)
                 try {
                     val apiInterface = apiService.signInUser(data)
 
@@ -151,8 +151,9 @@ class RetrofitCallsAuthentication {
             CoroutineScope(Dispatchers.IO + job).launch {
 
                 val baseUrl = context.getString(UrlData.BASE_URL.message)
+                val token = LocalData().getSharedPref("access_token", context)
 
-                val apiService = RetrofitBuilder.getRetrofit(baseUrl).create(Interface::class.java)
+                val apiService = RetrofitBuilder.getRetrofit(baseUrl, "$token").create(Interface::class.java)
                 try {
                     val apiInterface = apiService.registerUser(data)
                     Log.e("Tag", "Payload $data")
@@ -221,7 +222,9 @@ class RetrofitCallsAuthentication {
 
       fun loadDesignations(context: Context, viewModel: FhirViewModel) = runBlocking {
         val baseUrl = context.getString(UrlData.BASE_URL.message)
-        val apiService = RetrofitBuilder.getRetrofit(baseUrl).create(Interface::class.java)
+          val token = LocalData().getSharedPref("access_token", context)
+
+        val apiService = RetrofitBuilder.getRetrofit(baseUrl, "$token").create(Interface::class.java)
         try {
             val apiInterface = apiService.loadDesignations()
             if (apiInterface.isSuccessful) {
@@ -262,7 +265,9 @@ class RetrofitCallsAuthentication {
 
     fun loadCounties(context: Context, viewModel: FhirViewModel) = runBlocking {
         val baseUrl = context.getString(UrlData.BASE_URL.message)
-        val apiService = RetrofitBuilder.getRetrofit(baseUrl).create(Interface::class.java)
+        val token = LocalData().getSharedPref("access_token", context)
+
+        val apiService = RetrofitBuilder.getRetrofit(baseUrl, "$token").create(Interface::class.java)
         try {
             val apiInterface1 = apiService.loadCounties()
             if (apiInterface1.isSuccessful) {
@@ -309,8 +314,9 @@ class RetrofitCallsAuthentication {
             CoroutineScope(Dispatchers.IO + job).launch {
 
                 val baseUrl = context.getString(UrlData.BASE_URL.message)
+                val token = LocalData().getSharedPref("access_token", context)
 
-                val apiService = RetrofitBuilder.getRetrofit(baseUrl).create(Interface::class.java)
+                val apiService = RetrofitBuilder.getRetrofit(baseUrl, "$token").create(Interface::class.java)
                 try {
                     val apiInterface = apiService.loadCounties()
                     if (apiInterface.isSuccessful) {
@@ -369,8 +375,9 @@ class RetrofitCallsAuthentication {
             CoroutineScope(Dispatchers.IO + job).launch {
 
                 val baseUrl = context.getString(UrlData.BASE_URL.message)
+                val token = LocalData().getSharedPref("access_token", context)
 
-                val apiService = RetrofitBuilder.getRetrofit(baseUrl).create(Interface::class.java)
+                val apiService = RetrofitBuilder.getRetrofit(baseUrl, "$token").create(Interface::class.java)
                 try {
                     val apiInterface = apiService.loadDesignations()
                     if (apiInterface.isSuccessful) {
@@ -411,6 +418,45 @@ class RetrofitCallsAuthentication {
                 //Toast.makeText(context, messageToast, Toast.LENGTH_LONG).show()
                 //viewModel.getDesignations(messageToast)
             }
+
+        }
+    }
+
+    fun loadProfile(user_id: String, context: Context) = runBlocking{
+        val baseUrl = context.getString(UrlData.BASE_URL.message)
+        val token = LocalData().getSharedPref("access_token", context)
+
+        val apiService = RetrofitBuilder.getRetrofit(baseUrl, "$token").create(Interface::class.java)
+        try {
+            val apiInterface1 = apiService.loadUserInformation(user_id)
+            if (apiInterface1.isSuccessful) {
+
+                val statusCode = apiInterface1.code()
+                val body = apiInterface1.body()
+
+                if (statusCode == 200 || statusCode == 201) {
+
+                    if (body != null) {
+                        Log.e("Profile Information", "Profile Information $body")
+                    } else {
+                        val errorCode = apiInterface1.code()
+                        Log.e("Tag", "Profile Error Code $errorCode")
+                        Log.e("Tag", "Profile error body ${apiInterface1.errorBody()}")
+                    }
+                } else {
+                    val errorCode = apiInterface1.code()
+                    Log.e("Tag", "Profile Error Code $errorCode")
+                    Log.e("Tag", "Profile error body ${apiInterface1.errorBody()}")
+                }
+            } else {
+                val errorCode = apiInterface1.code()
+                Log.e("Tag", "Profile Error Code $errorCode")
+                Log.e("Tag", "Profile error body ${apiInterface1.errorBody()}")
+            }
+
+
+        } catch (e: Exception) {
+            Log.e("Tag", "Profile error")
 
         }
     }

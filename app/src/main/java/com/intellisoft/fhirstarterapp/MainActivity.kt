@@ -3,6 +3,7 @@ package com.intellisoft.fhirstarterapp
 import android.content.ClipData.Item
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
@@ -15,9 +16,13 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
+import com.google.gson.Gson
 import com.intellisoft.fhirstarterapp.auth.LoginActivity
 import com.intellisoft.fhirstarterapp.databinding.ActivityMainBinding
+import com.intellisoft.fhirstarterapp.model.UserInformation
+import com.intellisoft.fhirstarterapp.network.RetrofitCallsAuthentication
 import com.intellisoft.fhirstarterapp.utils.LocalData
+import kotlin.math.log
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     var logoutButton: Button? = null
+    private var retrofitCallsAuthentication = RetrofitCallsAuthentication()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.appBarMain.toolbar)
-
+        holdUserInfo()
         binding.apply {
 
         }
@@ -55,6 +61,15 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+    }
+
+    private fun holdUserInfo() {
+        val user = LocalData().getSharedPref("user_info", this@MainActivity)
+        if(user!=null) {
+            val userInformation = Gson().fromJson(user, UserInformation::class.java)
+            Log.e("tag", "User ID ${userInformation.id}")
+            retrofitCallsAuthentication.loadProfile(userInformation.id, this@MainActivity)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

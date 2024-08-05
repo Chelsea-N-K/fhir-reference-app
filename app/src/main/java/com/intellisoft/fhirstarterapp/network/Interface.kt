@@ -5,14 +5,14 @@ import com.intellisoft.fhirstarterapp.model.DesignationResponse
 import com.intellisoft.fhirstarterapp.model.LoginResponse
 import com.intellisoft.fhirstarterapp.model.RegistrationResponse
 import com.intellisoft.fhirstarterapp.model.User
-import retrofit2.Call
+import com.intellisoft.fhirstarterapp.model.UserInformation
+import com.intellisoft.fhirstarterapp.model.UserProfileInformationResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.Path
 
 interface Interface {
 
@@ -29,6 +29,8 @@ interface Interface {
         @Body dbSignIn: User
     ): Response<RegistrationResponse>
 
+
+
 //    @GET("users/counties")
 //    @Headers("Accept: application/json")
 //    suspend fun searchCounties(
@@ -44,6 +46,12 @@ interface Interface {
     @Headers("Accept: application/json")
     suspend fun loadDesignations():
             Response<DesignationResponse>
+
+    @GET("users/profile/{id}")
+    @Headers("Accept: application/json")
+    suspend fun loadUserInformation(
+        @Path("id") user_id: String):
+            Response<UserProfileInformationResponse>
 
 
 //    @GET("users/profile/")

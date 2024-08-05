@@ -23,5 +23,6 @@
     <string name="login_prompt">Already have an account? Login</string>
     <string name="county">County</string>
     <string name="designation">Designation</string>
+    <string name="profile">Profile</string>
 
 </resources>
